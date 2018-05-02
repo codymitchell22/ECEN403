@@ -38,14 +38,12 @@ SOURCES       = Lepton_I2C.cpp \
 		LeptonThread.cpp \
 		main.cpp \
 		MyLabel.cpp \
-		Palettes.cpp \
 		SPI.cpp gen_mocs/moc_LeptonThread.cpp \
 		gen_mocs/moc_MyLabel.cpp
 OBJECTS       = gen_objs/Lepton_I2C.o \
 		gen_objs/LeptonThread.o \
 		gen_objs/main.o \
 		gen_objs/MyLabel.o \
-		gen_objs/Palettes.o \
 		gen_objs/SPI.o \
 		gen_objs/moc_LeptonThread.o \
 		gen_objs/moc_MyLabel.o
@@ -73,7 +71,7 @@ DIST          = /usr/share/qt4/mkspecs/common/unix.conf \
 		/usr/share/qt4/mkspecs/features/yacc.prf \
 		/usr/share/qt4/mkspecs/features/lex.prf \
 		/usr/share/qt4/mkspecs/features/include_source_dir.prf \
-		raspberrypi_video.pro
+		thermal_video.pro
 QMAKE_TARGET  = thermal_video
 DESTDIR       = 
 TARGET        = thermal_video
@@ -105,7 +103,7 @@ all: Makefile $(TARGET)
 $(TARGET): sdk $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
-Makefile: raspberrypi_video.pro  /usr/share/qt4/mkspecs/linux-g++/qmake.conf /usr/share/qt4/mkspecs/common/unix.conf \
+Makefile: thermal_video.pro  /usr/share/qt4/mkspecs/linux-g++/qmake.conf /usr/share/qt4/mkspecs/common/unix.conf \
 		/usr/share/qt4/mkspecs/common/linux.conf \
 		/usr/share/qt4/mkspecs/common/gcc-base.conf \
 		/usr/share/qt4/mkspecs/common/gcc-base-unix.conf \
@@ -131,7 +129,7 @@ Makefile: raspberrypi_video.pro  /usr/share/qt4/mkspecs/linux-g++/qmake.conf /us
 		/usr/share/qt4/mkspecs/features/include_source_dir.prf \
 		/usr/lib/arm-linux-gnueabihf/libQtGui.prl \
 		/usr/lib/arm-linux-gnueabihf/libQtCore.prl
-	$(QMAKE) -o Makefile raspberrypi_video.pro
+	$(QMAKE) -o Makefile thermal_video.pro
 /usr/share/qt4/mkspecs/common/unix.conf:
 /usr/share/qt4/mkspecs/common/linux.conf:
 /usr/share/qt4/mkspecs/common/gcc-base.conf:
@@ -163,7 +161,7 @@ qmake:  FORCE
 
 dist: 
 	@$(CHK_DIR_EXISTS) gen_objs/thermal_video1.0.0 || $(MKDIR) gen_objs/thermal_video1.0.0 
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) gen_objs/thermal_video1.0.0/ && $(COPY_FILE) --parents Lepton_I2C.h LeptonThread.h MyLabel.h Palettes.h SPI.h gen_objs/thermal_video1.0.0/ && $(COPY_FILE) --parents Lepton_I2C.cpp LeptonThread.cpp main.cpp MyLabel.cpp Palettes.cpp SPI.cpp gen_objs/thermal_video1.0.0/ && (cd `dirname gen_objs/thermal_video1.0.0` && $(TAR) thermal_video1.0.0.tar thermal_video1.0.0 && $(COMPRESS) thermal_video1.0.0.tar) && $(MOVE) `dirname gen_objs/thermal_video1.0.0`/thermal_video1.0.0.tar.gz . && $(DEL_FILE) -r gen_objs/thermal_video1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) gen_objs/thermal_video1.0.0/ && $(COPY_FILE) --parents Lepton_I2C.h LeptonThread.h MyLabel.h SPI.h gen_objs/thermal_video1.0.0/ && $(COPY_FILE) --parents Lepton_I2C.cpp LeptonThread.cpp main.cpp MyLabel.cpp SPI.cpp gen_objs/thermal_video1.0.0/ && (cd `dirname gen_objs/thermal_video1.0.0` && $(TAR) thermal_video1.0.0.tar thermal_video1.0.0 && $(COMPRESS) thermal_video1.0.0.tar) && $(MOVE) `dirname gen_objs/thermal_video1.0.0`/thermal_video1.0.0.tar.gz . && $(DEL_FILE) -r gen_objs/thermal_video1.0.0
 
 
 clean:compiler_clean 
@@ -234,9 +232,6 @@ gen_objs/main.o: main.cpp LeptonThread.h \
 
 gen_objs/MyLabel.o: MyLabel.cpp MyLabel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gen_objs/MyLabel.o MyLabel.cpp
-
-gen_objs/Palettes.o: Palettes.cpp Palettes.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gen_objs/Palettes.o Palettes.cpp
 
 gen_objs/SPI.o: SPI.cpp SPI.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gen_objs/SPI.o SPI.cpp

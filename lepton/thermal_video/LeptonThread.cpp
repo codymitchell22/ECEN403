@@ -1,6 +1,5 @@
 #include "LeptonThread.h"
 
-#include "Palettes.h"
 #include "SPI.h"
 #include "Lepton_I2C.h"
 
@@ -19,9 +18,6 @@ LeptonThread::~LeptonThread() {
 
 void LeptonThread::run()
 {
-	//create the initial image
-	myImage = QImage(80, 60, QImage::Format_RGB888);
-
 	//open spi port
 	SpiOpenPort(0);
 
@@ -30,7 +26,7 @@ void LeptonThread::run()
 		//read data packets from lepton over SPI
 		int resets = 0;
 		for(int j=0;j<PACKETS_PER_FRAME;j++) {
-			//if it's a drop packet, reset j to 0, set to -1 so he'll be at 0 again loop
+			//if it's a drop packet, reset j to 0, set to -1 so it'll be at 0 again loop
 			read(spi_cs0_fd, result+sizeof(uint8_t)*PACKET_SIZE*j, sizeof(uint8_t)*PACKET_SIZE);
 			int packetNumber = result[j*PACKET_SIZE+1];
 			if(packetNumber != j) {
@@ -46,11 +42,7 @@ void LeptonThread::run()
 				}
 			}
 		}
-		if(resets >= 30) {
-			//qDebug() << "done reading! resets: " << resets;
-		
-		}
-
+        // Get raw data values for temp calculations 
 		frameBuffer = (uint16_t *)result;
 		int row, column;
 		uint16_t raw_value;
@@ -82,27 +74,8 @@ void LeptonThread::run()
 			row = i / PACKET_SIZE_UINT16 ;
 		}
 
-		float diff = maxValue - minValue;
-		float scale = 255/diff;
-		QRgb color;
-		for(int i=0;i<FRAME_SIZE_UINT16;i++) {
-			if(i % PACKET_SIZE_UINT16 < 2) {
-				continue;
-			}
-			raw_value = (frameBuffer[i] - minValue) * scale;
-			const int *colormap = colormap_ironblack;
-			color = qRgb(colormap[3*raw_value], colormap[3*raw_value+1], colormap[3*raw_value+2]);
-			column = (i % PACKET_SIZE_UINT16 ) - 2;
-			row = i / PACKET_SIZE_UINT16;
-			myImage.setPixel(column, row, color);
-		}
-
-		//lets emit the signal for update
-		emit updateImage(myImage);
-
-	}
 	
-	//finally, close SPI port just bcuz
+	//close SPI port just cause
 	SpiClosePort(0);
 }
 

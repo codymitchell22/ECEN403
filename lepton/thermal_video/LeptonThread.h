@@ -29,7 +29,7 @@ public slots:
 
 signals:
   void updateText(QString);
-  void updateImage(QImage);
+  //void updateImage(QImage);
 
 private:
 
